@@ -1,0 +1,5 @@
+*.[oa]
+*.sw[po]
+push_swap
+checker
+operations_data.js

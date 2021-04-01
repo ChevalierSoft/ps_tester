@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- import data from ps_tester -->
+<script type="text/javascript" src="operations_data.js"></script>
+<!-- make a canvas with it -->
+<script>
+window.onload = function () {
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	animationDuration: 1000,
+	theme: "dark2",
+	title: {
+		text: "Number of operations by iteration",
+		textColor: "#ffffff"
+	},
+	axisX: {
+		title: "Iterations",
+		titleFontColor: "#ffffff",
+		minimum: 0
+	},
+	axisY: {
+		title: "Number of operations",
+		titleFontColor: "#ffffff",
+		gridColor: "#444444",
+		includeZero: true,
+		stripLines: [
+			{value: 3,label: "max for 3 random numbers"},
+			{value: 12,label: "max for 5 random numbers"},
+			{value: 700,label: "5/5 for 100 random numbers"},
+			{value: 900,label: "4/5 for 100 random numbers"},
+			{value: 1100,label: "3/5 for 100 random numbers"},
+			{value: 1300,label: "2/5 for 100 random numbers"},
+			{value: 1500,label: "1/5 for 100 random numbers"},
+			{value: 5500,label: "5/5 for 500 random numbers"},
+			{value: 7000,label: "4/5 for 500 random numbers"},
+			{value: 8500,label: "3/5 for 500 random numbers"},
+			{value: 10000,label: "2/5 for 500 random numbers"},
+			{value: 11500, label: "1/5 for 500 random numbers"},
+
+			{value: operations_minimum, label: 'minimum: '.concat(operations_minimum), color: "cyan",labelFontColor: "cyan"},
+			{value: operations_maximum, label: 'maximum: '.concat(operations_maximum), color: "yellow",labelFontColor: "yellow"},
+			{value: operations_avg, label: 'avg: '.concat(operations_avg), color: "#fff", labelFontColor: "#fff"}
+		]
+	},
+	data: [{
+		indexLabelFontColor: "darkSlateGray",
+		// color: "rgba(0, 179, 255, .6)",
+		color: "rgba(255, 143, 240, .6)",
+		name: "views",
+		// type: "splineArea",
+		type: "area",
+		dataPoints: array
+	}]
+	});
+	chart.render();
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 700px; width: 100%;"></div>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
