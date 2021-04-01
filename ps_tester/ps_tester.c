@@ -12,7 +12,7 @@
 
 #include "../inc/ps_tester.h"
 
-# define N 100
+# define N 300
 
 void	new_rand_req(int *ar, int j, int *r)
 {
