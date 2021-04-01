@@ -12,11 +12,13 @@
 
 #include "../inc/ps_tester.h"
 
+# define N 100
+
 void	new_rand_req(int *ar, int j, int *r)
 {
 	int	i;
 
-	*r = rand();// % 1000;	// MAXIMUM here
+	*r = rand();	// MAXIMUM here
 	i = 0;
 	while (i < j)
 	{
@@ -52,32 +54,13 @@ int	*init_array(int size)
 	return (ar);
 }
 
-void	aff(int *ar, int size)
+void	str_clear(char *as[N])
 {
-	int i;
+	int	i;
 
-	i = -1;
-	while (++i < size)
-		printf("%d | %d\n", i, ar[i]);
-}
-
-char	**str_array_init(int *ar, int size)
-{
-	int		i;
-	char	tmp[16];
-	char	**s;
-
-	s = malloc(sizeof(char *) * (size + 2)); // +1 for prog name
-	s[0] = strdup("push_swap");
-	i = 1;
-	while (i - 1< size)
-	{
-		snprintf(tmp, 16, "%d ", ar[i - 1]);
-		s[i] = strdup(tmp);
-		i++;
-	}
-	s[i] = NULL;
-	return (s);
+	i = 0;
+	while ((as)[i])
+		free((as)[i++]);
 }
 
 int asprintf(char **strp, const char *fmt, ...);
@@ -88,36 +71,16 @@ char	*arg_str(int *ar, int size)
 	char	*s;
 	char	*tmp;
 
-	s = strdup("./push_swap ");
+	s = strdup("../push_swap ");
 	i = 0;
 	while (i < size)
 	{
 		tmp = s;
 		asprintf(&s, "%s%d ", s, ar[i]);
-		//printf(">>> %s\n", s);
 		free(tmp);
 		i++;
 	}
 	return (s);
-}
-
-void	str_clear(char **as)
-{
-	int	i;
-
-	i = 0;
-	while ((as)[i])
-		free((as)[i++]);
-	//free(as[0]);
-}
-
-void	aff_string(char **as, int size)
-{
-	int i;
-
-	i = 0;
-	while (as[i])
-		printf("[%s]\n", as[i++]);
 }
 
 int	exec_ps(char *as, char **env, int *cpt)
@@ -131,12 +94,10 @@ int	exec_ps(char *as, char **env, int *cpt)
 	while (fgets(l, 16, r))
 	{
 		(*cpt)++;
-		//dprintf(2, "deb : %s", l);
 		fprintf(f, "%s",l);
 	}
 	pclose(r);
 	fclose(f);
-	
 	return (0);
 }
 
@@ -149,33 +110,26 @@ int	exec_ch(char *as, char **env, int cpt)
 	int		sout[2];
 	int		ret;
 
-	strncpy(as + 2, "checker  ", 9);
+	strncpy(as + 3, "checker  ", 9);
 
 	if (!(f = fopen("tmp.log", "r")))
 	{
 		dprintf(2, "can't open tmp file\n");
 		return (1);
 	}
-
 	pipe(sout);
 	ret = dup(1);
 	dup2(sout[1], 1);
-
 	r = popen(as, "w");
 	while (fgets(l, 16, f))
-	{
 		fprintf(r, "%s", l);
-		//dprintf(2, "-> : %s", l);
-	}
 	pclose(r);
 	fclose(f);
-
 	read(sout[0], l, 16);
 	dup2(ret, 1);
 	close(ret);
 	close(sout[0]);
 	close(sout[1]);
-
 	if (strncmp(l, "OK\n", 3))
 	{
 		f = fopen("tmp.log", "a");
@@ -184,13 +138,9 @@ int	exec_ch(char *as, char **env, int cpt)
 		dprintf(2, "KO or Error : see 'tmp.log' to find more inforamtions\n");
 		return (1);
 	}
-	// printf("OK | %d\n", cpt);
 	remove("tmp.log");
 	return (0);
 }
-
-
-# define N 100
 
 void	min_max_avg(unsigned long long t[3], int *cpt)
 {
@@ -203,13 +153,9 @@ void	min_max_avg(unsigned long long t[3], int *cpt)
 	while (i < N)
 	{
 		if (cpt[i] < cpt[t[0]])
-		{
 			t[0] = i;
-		}
 		else if (cpt[i] > cpt[t[1]])
-		{
 			t[1] = i;
-		}
 		t[2] += cpt[i];
 		i++;
 	}
@@ -246,14 +192,14 @@ void	show_stat(int *cpt)
 	fprintf(f, "{ x: %d, y: %d}\n", i, cpt[i]);
 	fprintf(f, "]\n");
 	fclose(f);
-	system("firefox ./index.html");
+	system("xdg-open ./index.html");
 }
 
 void	main(int argc, char **argv, char **env)
 {
 	int		size;
 	int		*ar[N];
-	char	*as[N];
+	char	*as[N + 1];
 	int		cpt[N];
 	int		i;
 
@@ -265,19 +211,16 @@ void	main(int argc, char **argv, char **env)
 	if (errno || size <= 0)
 		exit(1);
 
-	// loop N time and store the stats in cpt
+	printf("processing...\n");
 	memset(cpt, 0, sizeof(int) * N);
-	memset(as, 0, sizeof(char *) * N);
-
+	memset(as, 0, sizeof(char *) * (N + 1));
 	i = 0;
 	while (i < N)
 	{
 		ar[i] = init_array(size);
-		//aff(ar[i], size);
 
 		as[i] = arg_str(ar[i], size);
 		free(ar[i]);
-		//aff_string(as, size);
 
 		exec_ps(as[i], env, &cpt[i]);
 
@@ -286,5 +229,6 @@ void	main(int argc, char **argv, char **env)
 		i++;
 	}
 	show_stat(cpt);
-	//str_clear(as);
+	printf("done\n");
+	str_clear(as);
 }
