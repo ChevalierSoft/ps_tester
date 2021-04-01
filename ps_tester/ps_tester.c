@@ -195,7 +195,7 @@ void	show_stat(int *cpt)
 	system("xdg-open ./index.html");
 }
 
-void	main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	int		size;
 	int		*ar[N];
@@ -210,7 +210,11 @@ void	main(int argc, char **argv, char **env)
 	size = (int)strtoll(argv[1], NULL, 10);
 	if (errno || size <= 0)
 		exit(1);
-
+	if (system("make all --silent -C .."))
+	{
+		printf("Error while compiling your push_swap.\n");
+		return (1);
+	}
 	printf("processing...\n");
 	memset(cpt, 0, sizeof(int) * N);
 	memset(as, 0, sizeof(char *) * (N + 1));
@@ -218,17 +222,14 @@ void	main(int argc, char **argv, char **env)
 	while (i < N)
 	{
 		ar[i] = init_array(size);
-
 		as[i] = arg_str(ar[i], size);
 		free(ar[i]);
-
 		exec_ps(as[i], env, &cpt[i]);
-
 		exec_ch(as[i], env, cpt[i]);
-
 		i++;
 	}
 	show_stat(cpt);
 	printf("done\n");
 	str_clear(as);
+	return (0);
 }
