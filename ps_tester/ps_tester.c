@@ -18,7 +18,7 @@ void	new_rand_req(int *ar, int j, int *r)
 {
 	int	i;
 
-	*r = rand();	// MAXIMUM here
+	*r = rand() % 100;	// MAXIMUM here
 	i = 0;
 	while (i < j)
 	{
@@ -165,9 +165,10 @@ void	min_max_avg(unsigned long long t[3], int *cpt)
 		t[2] = (unsigned long long)(t[2] / (int)N);
 }
 
-void	show_stat(int *cpt)
+void	show_stat(int *cpt, char *as[N])
 {
 	FILE				*f;
+	FILE				*max;
 	int					i;
 	unsigned long long	t[3];
 
@@ -185,7 +186,11 @@ void	show_stat(int *cpt)
 		if (i == t[0])
 			fprintf(f, "{ x: %d, y: %d, indexLabel: \"\u2193\", markerColor: \"cyan\", markerType: \"cross\"},\n", i, cpt[i]);
 		else if (i == t[1])
+		{
 			fprintf(f, "{ x: %d, y: %d, indexLabel: \"\u2191\", markerColor: \"yellow\", markerType: \"cross\"},\n", i, cpt[i]);
+			max = fopen("maximum_spike.txt", "w");
+			fprintf(max, "%s", as[i] + 13);
+		}
 		else
 			fprintf(f, "{ x: %d, y: %d},\n", i, cpt[i]);
 	}
@@ -225,10 +230,14 @@ int	main(int argc, char **argv, char **env)
 		as[i] = arg_str(ar[i], size);
 		free(ar[i]);
 		exec_ps(as[i], env, &cpt[i]);
-		exec_ch(as[i], env, cpt[i]);
+		if (exec_ch(as[i], env, cpt[i]))
+		{
+			str_clear(as);
+			return (1);
+		}
 		i++;
 	}
-	show_stat(cpt);
+	show_stat(cpt, as);
 	printf("done\n");
 	str_clear(as);
 	return (0);
