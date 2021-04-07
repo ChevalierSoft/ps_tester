@@ -12,13 +12,22 @@
 
 #include "../inc/ps_tester.h"
 
-# define N 300
+# define N 500
 
+static inline
+int	rand2(void)
+{
+	if(rand() % 2)
+		return (rand() + (1 << 31));
+	return (rand());
+}
+
+static inline
 void	new_rand_req(int *ar, int j, int *r)
 {
 	int	i;
 
-	*r = rand() % 100;	// MAXIMUM here
+	*r = rand2();	// MAXIMUM here
 	i = 0;
 	while (i < j)
 	{
@@ -54,7 +63,7 @@ int	*init_array(int size)
 	return (ar);
 }
 
-void	str_clear(char *as[N])
+void	str_clear(char *as[N + 1])
 {
 	int	i;
 
@@ -190,6 +199,7 @@ void	show_stat(int *cpt, char *as[N])
 			fprintf(f, "{ x: %d, y: %d, indexLabel: \"\u2191\", markerColor: \"yellow\", markerType: \"cross\"},\n", i, cpt[i]);
 			max = fopen("maximum_spike.txt", "w");
 			fprintf(max, "%s", as[i] + 13);
+			fclose(max);
 		}
 		else
 			fprintf(f, "{ x: %d, y: %d},\n", i, cpt[i]);
@@ -215,7 +225,7 @@ int	main(int argc, char **argv, char **env)
 	size = (int)strtoll(argv[1], NULL, 10);
 	if (errno || size <= 0)
 		exit(1);
-	if (system("make all --silent -C .."))
+	if (system("make re --silent -C .."))
 	{
 		printf("Error while compiling your push_swap.\n");
 		return (1);
