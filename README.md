@@ -1,6 +1,8 @@
 # ps\_tester
 push\_swap operation counter
 
+![screenshot](screen.png)
+
 ## requirement
 - you need to have a working checker.
 - you need to have a `all` command in your makefile that compiles both push\_swap and checker.
