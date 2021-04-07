@@ -9,7 +9,7 @@ push\_swap operation counter
 
 ## installation
 get to your push\_swap repo then :
-``git clone https://github.com/ChevalierSoft/ps_tester.git && cd ./ps_tester``
+``git clone https://github.com/ChevalierSoft/ps_tester.git && cd ./ps_tester && make``
 
 ## usage
 ``./pt <size of the stack>``
