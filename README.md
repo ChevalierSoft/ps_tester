@@ -19,6 +19,6 @@ get to your push\_swap repo then :
 ``./pt <size of the stack> && open index.html``
 
 ## notes
-If you find that your push_swap uses too much operations, the maximum operation count is stored in `maximum_spike.txt`.
-The final view is stored inside `index.hml` in ps_tester's root.
-Notice that this programme will compile your code using `make`, not `make re` because checker is now a bonus.
+- If you find that your push_swap uses too much operations, the maximum operation count is stored in `maximum_spike.txt`.
+- The final view is stored inside `index.hml` in ps_tester's root.
+- Notice that this programme will compile your code using `make`, not `make re` because checker is now a bonus.
