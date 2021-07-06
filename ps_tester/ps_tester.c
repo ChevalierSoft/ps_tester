@@ -6,7 +6,7 @@
 /*   By: dait-atm <dait-atm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 08:26:04 by dait-atm          #+#    #+#             */
-/*   Updated: 2021/03/31 10:30:29 by dait-atm         ###   ########.fr       */
+/*   Updated: 2021/07/06 03:35:28 by dait-atm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static inline
 int	rand2(void)
 {
 	if(rand() % 2)
-		return (rand() + (1 << 31));
+		return (rand() + (1 << 31));	// allows negative numbers
 	return (rand());
 }
 
@@ -27,7 +27,7 @@ void	new_rand_req(int *ar, int j, int *r)
 {
 	int	i;
 
-	*r = rand2();	// MAXIMUM here
+	*r = rand2();						// MAXIMUM here
 	i = 0;
 	while (i < j)
 	{
@@ -225,7 +225,7 @@ int	main(int argc, char **argv, char **env)
 	size = (int)strtoll(argv[1], NULL, 10);
 	if (errno || size <= 0)
 		exit(1);
-	if (system("make re --silent -C .."))
+	if (system("make --silent -C .."))
 	{
 		printf("Error while compiling your push_swap.\n");
 		return (1);
